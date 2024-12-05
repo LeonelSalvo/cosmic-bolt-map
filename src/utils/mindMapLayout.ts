@@ -1,4 +1,5 @@
 import type { MindMapNode, NodePosition } from '../types/MindMap';
+import { getViewportDimensions } from './viewportCalculations';
 
 function randomInRange(min: number, max: number): number {
   return Math.random() * (max - min) + min;
@@ -12,11 +13,8 @@ function checkOverlap(positions: NodePosition[], x: number, y: number, minDistan
   });
 }
 
-export function calculateNodePositions(
-  root: MindMapNode,
-  width: number = 1000,
-  height: number = 800
-): NodePosition[] {
+export function calculateNodePositions(root: MindMapNode): NodePosition[] {
+  const { width, height } = getViewportDimensions();
   const positions: NodePosition[] = [];
   const centerX = width / 2;
   const centerY = height / 2;

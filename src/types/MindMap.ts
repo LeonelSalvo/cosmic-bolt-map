@@ -17,6 +17,7 @@ export interface NodePosition {
   node: MindMapNode;
   level: number;
   parentId?: string;
+  distanceFromActive?: number;
 }
 
 export interface VisibleNode {

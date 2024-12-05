@@ -1,29 +1,15 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { getViewportDimensions } from '../utils/viewportCalculations';
 
 interface Props {
   children: React.ReactNode;
-  width: number;
-  height: number;
 }
 
-export default function ZoomableCanvas({ children, width, height }: Props) {
+export default function ZoomableCanvas({ children }: Props) {
   const svgRef = useRef<SVGSVGElement>(null);
   const gRef = useRef<SVGGElement>(null);
-  const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown>>();
-
-  const centerView = useCallback(() => {
-    if (!svgRef.current || !zoomRef.current) return;
-    
-    const svg = d3.select(svgRef.current);
-    const initialTransform = d3.zoomIdentity
-      .translate(width / 2, height / 2)
-      .scale(1);
-    
-    svg.transition()
-      .duration(750)
-      .call(zoomRef.current.transform, initialTransform);
-  }, [width, height]);
+  const { width, height } = getViewportDimensions();
 
   useEffect(() => {
     if (!svgRef.current || !gRef.current) return;
@@ -37,7 +23,6 @@ export default function ZoomableCanvas({ children, width, height }: Props) {
         g.attr('transform', event.transform);
       });
 
-    zoomRef.current = zoom;
     svg.call(zoom);
 
     // Center the view initially
@@ -53,9 +38,6 @@ export default function ZoomableCanvas({ children, width, height }: Props) {
 
   return (
     <div className="canvas-container">
-      <button className="center-button" onClick={centerView}>
-        Center View
-      </button>
       <svg
         ref={svgRef}
         width="100%"

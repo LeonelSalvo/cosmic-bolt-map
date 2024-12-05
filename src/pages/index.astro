@@ -10,7 +10,7 @@ const nodePositions = calculateNodePositions(mockData);
 
 <Layout title="Cosmic Mind Map">
   <main>
-    <InteractiveConstellation client:load initialNodes={nodePositions} />
+    <InteractiveConstellation client:only="react" initialNodes={nodePositions} />
   </main>
 </Layout>
 

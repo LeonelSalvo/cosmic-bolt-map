@@ -33,59 +33,91 @@
   stroke: rgba(255, 255, 255, var(--line-opacity));
   stroke-width: 1;
   fill: none;
-  animation: blink 5s ease-in-out infinite;
   pointer-events: none;
-  will-change: stroke, stroke-width;
+  stroke-dasharray: var(--path-length);
+  stroke-dashoffset: var(--path-length);
+  opacity: 0;
+  animation: 
+    drawLine 1s ease-out var(--animation-delay, 0ms) forwards,
+    blink 5s ease-in-out calc(var(--animation-delay, 0ms) + 1s) infinite;
+}
+
+.constellation-line.closing {
+  animation: 
+    closeLine 0.6s ease-in forwards;
 }
 
 .star {
   fill: #fff;
   filter: url(#glow);
-  animation: twinkle 3s ease-in-out infinite;
-  opacity: var(--star-opacity);
-  transition: r 0.3s ease;
-  will-change: opacity, r;
   cursor: pointer;
+  will-change: opacity;
+  opacity: 0;
+  animation: 
+    starAppear 0.6s ease-out var(--animation-delay, 0ms) forwards,
+    starPulse 3s ease-in-out calc(var(--animation-delay, 0ms) + 0.6s) infinite;
+}
+
+.star.closing {
+  animation: starClose 0.6s ease-in forwards;
 }
 
 .star-label {
   fill: #fff;
   font-size: 12px;
-  opacity: calc(var(--star-opacity) * 0.8);
+  opacity: 0;
   pointer-events: none;
   user-select: none;
+  animation: fadeIn 0.6s ease-out calc(var(--animation-delay, 0ms) + 600ms) forwards;
 }
 
-.info-button {
-  fill: #ffffff;
-  opacity: 0.2;
+.star-label.closing {
+  animation: fadeOut 0.6s ease-in forwards;
+}
+
+.info-button-group, .close-button-group {
+  opacity: 0;
+  animation: fadeIn 0.6s ease-out calc(var(--animation-delay, 0ms) + 800ms) forwards;
+}
+
+.info-button-group.closing, .close-button-group.closing {
+  animation: fadeOut 0.6s ease-in forwards;
+}
+
+.info-button, .close-button {
+  fill: rgba(255, 255, 255, 0.2);
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: fill 0.2s ease;
 }
 
-.info-button:hover {
-  opacity: 0.4;
+.info-button:hover, .close-button:hover {
+  fill: rgba(255, 255, 255, 0.4);
 }
 
-.info-button-text {
+.info-button-text, .close-button-text {
   fill: #ffffff;
   font-size: 12px;
   cursor: pointer;
   pointer-events: none;
 }
 
+.close-button-text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
 .info-card {
-  position: fixed;
   background: rgba(13, 13, 48, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 16px;
-  width: 300px;
   color: white;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  z-index: 1000;
   pointer-events: auto;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: cardAppear 0.3s ease-out forwards;
 }
 
 .info-card .close-button {
@@ -132,14 +164,12 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
-@keyframes twinkle {
+@keyframes starPulse {
   0%, 100% {
     opacity: calc(var(--star-opacity) * 0.6);
-    r: calc(var(--base-radius, 3) * 0.9);
   }
   50% {
     opacity: var(--star-opacity);
-    r: var(--base-radius, 3);
   }
 }
 
@@ -149,5 +179,74 @@
   }
   50% { 
     stroke: rgba(255, 255, 255, var(--line-opacity));
+  }
+}
+
+@keyframes starAppear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: var(--star-opacity);
+  }
+}
+
+@keyframes starClose {
+  0% {
+    opacity: var(--star-opacity);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes drawLine {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: var(--path-length);
+  }
+  100% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes closeLine {
+  0% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: var(--path-length);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: var(--star-opacity, 1);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: var(--star-opacity, 1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cardAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
