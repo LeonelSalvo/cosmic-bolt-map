@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import InteractiveConstellation from '../components/InteractiveConstellation';
+import { mockData } from '../data/mockData';
+import { calculateNodePositions } from '../utils/mindMapLayout';
+import '../styles/constellation.css';
+
+const nodePositions = calculateNodePositions(mockData);
+---
+
+<Layout title="Cosmic Mind Map">
+  <main>
+    <InteractiveConstellation client:load initialNodes={nodePositions} />
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+</style>
