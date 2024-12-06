@@ -1,0 +1,16 @@
+.constellation-line {
+  stroke: rgba(255, 255, 255, var(--line-opacity));
+  stroke-width: 1;
+  fill: none;
+  pointer-events: none;
+  stroke-dasharray: var(--path-length);
+  stroke-dashoffset: var(--path-length);
+  opacity: 0;
+  animation: 
+    drawLine 1s ease-out var(--animation-delay, 0ms) forwards,
+    blink 5s ease-in-out calc(var(--animation-delay, 0ms) + 1s) infinite;
+}
+
+.constellation-line.closing {
+  animation: closeLine 0.6s ease-in forwards;
+}

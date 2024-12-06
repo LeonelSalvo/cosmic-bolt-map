@@ -1,0 +1,27 @@
+.star {
+  fill: #fff;
+  filter: url(#glow);
+  cursor: pointer;
+  will-change: opacity;
+  opacity: 0;
+  animation: 
+    starAppear 0.6s ease-out var(--animation-delay, 0ms) forwards,
+    starPulse 3s ease-in-out calc(var(--animation-delay, 0ms) + 0.6s) infinite;
+}
+
+.star.closing {
+  animation: starClose 0.6s ease-in forwards;
+}
+
+.star-label {
+  fill: #fff;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  animation: fadeIn 0.6s ease-out calc(var(--animation-delay, 0ms) + 600ms) forwards;
+}
+
+.star-label.closing {
+  animation: fadeOut 0.6s ease-in forwards;
+}

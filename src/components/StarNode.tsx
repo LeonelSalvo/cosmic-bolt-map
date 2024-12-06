@@ -1,6 +1,8 @@
 import { memo, useState } from 'react';
-import type { NodePosition } from '../types/MindMap';
+import type { NodePosition, NodeMetadata } from '../types/MindMap';
 import InfoCard from './InfoCard';
+import AddNodeButton from './AddNodeButton';
+import DeleteNodeButton from './DeleteNodeButton';
 import { getNodeSize, getNodeOpacity } from '../utils/nodeCalculations';
 
 interface Props {
@@ -9,8 +11,12 @@ interface Props {
   childrenVisible: boolean;
   isActive: boolean;
   isClosing: boolean;
+  isRoot?: boolean;
   onOpen: () => void;
   onClose: () => void;
+  onDelete: (nodeId: string) => void;
+  onAddChild: (parentId: string) => void;
+  onUpdateMetadata: (nodeId: string, metadata: NodeMetadata) => void;
   animationDelay: number;
 }
 
@@ -20,14 +26,23 @@ const StarNode = memo(function StarNode({
   childrenVisible, 
   isActive,
   isClosing,
+  isRoot = false,
   onOpen,
   onClose,
+  onDelete,
+  onAddChild,
+  onUpdateMetadata,
   animationDelay 
 }: Props) {
   const [showInfo, setShowInfo] = useState(false);
 
   const nodeSize = getNodeSize(node, hasChildren, isActive);
   const nodeOpacity = getNodeOpacity(node, isActive);
+
+  // Close info card when node is deactivated
+  if (!isActive && showInfo) {
+    setShowInfo(false);
+  }
 
   return (
     <>
@@ -48,11 +63,11 @@ const StarNode = memo(function StarNode({
           textAnchor="middle"
           className={`star-label ${isClosing ? 'closing' : ''}`}
         >
-          {node.node.label}
+          {node.node.metadata?.name || node.node.label}
         </text>
-        {node.node.metadata && (
+        {node.node.metadata && isActive && (
           <g 
-            transform="translate(15, -15)"
+            transform="translate(25, -15)"
             className={`info-button-group ${isClosing ? 'closing' : ''}`}
           >
             <circle 
@@ -72,9 +87,9 @@ const StarNode = memo(function StarNode({
             </text>
           </g>
         )}
-        {hasChildren && childrenVisible && (
+        {hasChildren && childrenVisible && isActive && (
           <g 
-            transform="translate(-15, -15)"
+            transform="translate(-25, -15)"
             className={`close-button-group ${isClosing ? 'closing' : ''}`}
           >
             <circle 
@@ -85,22 +100,46 @@ const StarNode = memo(function StarNode({
                 onClose();
               }}
             />
-            <text
-              textAnchor="middle"
-              dy="4"
-              className="close-button-text"
-            >
-              ×
-            </text>
+            <path
+              d="M -4 -4 L 4 4 M -4 4 L 4 -4"
+              className="eye-icon"
+            />
           </g>
         )}
+        {isActive && (
+          <>
+            <AddNodeButton
+              x={0}
+              y={-30}
+              onClick={() => onAddChild(node.node.id)}
+              isClosing={isClosing}
+              animationDelay={animationDelay}
+            />
+            <DeleteNodeButton
+              x={0}
+              y={30}
+              onClick={() => onDelete(node.node.id)}
+              isClosing={isClosing}
+              animationDelay={animationDelay}
+              disabled={isRoot}
+            />
+          </>
+        )}
       </g>
-      {showInfo && node.node.metadata && (
-        <InfoCard
-          metadata={node.node.metadata}
-          onClose={() => setShowInfo(false)}
-          position={{ x: node.x, y: node.y }}
-        />
+      {showInfo && isActive && node.node.metadata && (
+        <foreignObject
+          x={node.x - 150}
+          y={node.y - 200}
+          width="300"
+          height="300"
+          style={{ overflow: 'visible' }}
+        >
+          <InfoCard
+            metadata={node.node.metadata}
+            onClose={() => setShowInfo(false)}
+            onUpdate={(metadata) => onUpdateMetadata(node.node.id, metadata)}
+          />
+        </foreignObject>
       )}
     </>
   );

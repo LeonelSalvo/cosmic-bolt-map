@@ -2,6 +2,7 @@ export interface NodeMetadata {
   name?: string;
   description?: string;
   imageUrl?: string;
+  url?: string;
 }
 
 export interface MindMapNode {

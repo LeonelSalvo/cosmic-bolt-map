@@ -1,0 +1,86 @@
+@keyframes starPulse {
+  0%, 100% {
+    opacity: calc(var(--star-opacity) * 0.6);
+  }
+  50% {
+    opacity: var(--star-opacity);
+  }
+}
+
+@keyframes blink {
+  0%, 100% { 
+    stroke: rgba(255, 255, 255, calc(var(--line-opacity) * 0.2));
+  }
+  50% { 
+    stroke: rgba(255, 255, 255, var(--line-opacity));
+  }
+}
+
+@keyframes starAppear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: var(--star-opacity);
+  }
+}
+
+@keyframes starClose {
+  0% {
+    opacity: var(--star-opacity);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes drawLine {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: var(--path-length);
+  }
+  100% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes closeLine {
+  0% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: var(--path-length);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: var(--star-opacity, 1);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: var(--star-opacity, 1);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes cardAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
