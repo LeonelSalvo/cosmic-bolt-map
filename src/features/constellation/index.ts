@@ -1,7 +1,6 @@
-export * from './components';
-export * from './hooks';
-export * from './types';
-export * from './utils';
-export * from './config';
+export * from "./hooks";
+export * from "./types";
+export * from "./utils";
+export * from "./config";
 
-export { default as InteractiveConstellation } from './components/InteractiveConstellation';
+export { default as InteractiveConstellation } from "./components/InteractiveConstellation";

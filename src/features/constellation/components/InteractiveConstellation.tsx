@@ -1,15 +1,15 @@
-import { useState, useCallback } from 'react';
-import type { NodePosition, VisibleNode } from '../types';
-import { 
-  useNodeState, 
-  useVisibilityState, 
-  useLayoutState, 
+import { useState, useCallback } from "react";
+import type { NodePosition, VisibleNode } from "../types";
+import {
+  useNodeState,
+  useVisibilityState,
+  useLayoutState,
   useConstellationMode,
-  useSound
-} from '../hooks';
-import { Canvas } from './canvas';
-import { ConstellationView } from './constellation';
-import { ControlsContainer } from './controls';
+  useSound,
+} from "../hooks";
+import { Canvas } from "./canvas";
+import { ConstellationView } from "./constellation";
+import ControlsContainer from "./controls/ControlsContainer";
 
 interface Props {
   initialNodes: NodePosition[];
@@ -25,7 +25,7 @@ function InteractiveConstellation({ initialNodes }: Props) {
     setNodePositions,
     handleNodeDelete,
     handleAddChild,
-    handleUpdateMetadata
+    handleUpdateMetadata,
   } = useNodeState(initialNodes, isSmartLayoutEnabled);
 
   const {
@@ -36,7 +36,7 @@ function InteractiveConstellation({ initialNodes }: Props) {
     setActiveNodeId,
     setClosingNodes,
     handleNodeOpen,
-    handleNodeClose
+    handleNodeClose,
   } = useVisibilityState();
 
   const {
@@ -44,12 +44,10 @@ function InteractiveConstellation({ initialNodes }: Props) {
     setZoomLevel,
     isConstellationMode,
     handleResetPositions,
-    handleResetBranchPositions
+    handleResetBranchPositions,
   } = useLayoutState(rootNode, nodePositions, isSmartLayoutEnabled);
 
-  const {
-    handleStartConstellation
-  } = useConstellationMode(
+  const { handleStartConstellation } = useConstellationMode(
     activeNodeId,
     nodePositions,
     setZoomLevel,
@@ -57,25 +55,31 @@ function InteractiveConstellation({ initialNodes }: Props) {
     setClosingNodes
   );
 
-  const handleNodeOpenWithChildren = useCallback((nodeId: string) => {
-    setActiveNodeId(nodeId);
-    playEffect('NODE_SELECT');
-    const node = nodePositions.find(n => n.node.id === nodeId)?.node;
-    if (node?.children) {
-      const children: VisibleNode[] = node.children.map(child => ({
-        nodeId: child.id,
-        parentId: node.id
-      }));
-      handleNodeOpen(nodeId, children);
-    }
-  }, [nodePositions, handleNodeOpen, setActiveNodeId, playEffect]);
+  const handleNodeOpenWithChildren = useCallback(
+    (nodeId: string) => {
+      setActiveNodeId(nodeId);
+      playEffect("NODE_SELECT");
+      const node = nodePositions.find((n) => n.node.id === nodeId)?.node;
+      if (node?.children) {
+        const children: VisibleNode[] = node.children.map((child) => ({
+          nodeId: child.id,
+          parentId: node.id,
+        }));
+        handleNodeOpen(nodeId, children);
+      }
+    },
+    [nodePositions, handleNodeOpen, setActiveNodeId, playEffect]
+  );
 
-  const handleNodeCloseWithNode = useCallback((nodeId: string) => {
-    const node = nodePositions.find(n => n.node.id === nodeId)?.node;
-    if (node) {
-      handleNodeClose(nodeId, node);
-    }
-  }, [nodePositions, handleNodeClose]);
+  const handleNodeCloseWithNode = useCallback(
+    (nodeId: string) => {
+      const node = nodePositions.find((n) => n.node.id === nodeId)?.node;
+      if (node) {
+        handleNodeClose(nodeId, node);
+      }
+    },
+    [nodePositions, handleNodeClose]
+  );
 
   const handleResetBranchPositionsWithId = useCallback(() => {
     if (activeNodeId) {
@@ -95,9 +99,9 @@ function InteractiveConstellation({ initialNodes }: Props) {
     setActiveNodeId(null);
   }, [setActiveNodeId]);
 
-  const selectedPosition = activeNodeId ? 
-    nodePositions.find(n => n.node.id === activeNodeId) : 
-    null;
+  const selectedPosition = activeNodeId
+    ? nodePositions.find((n) => n.node.id === activeNodeId)
+    : null;
 
   return (
     <>
@@ -120,7 +124,7 @@ function InteractiveConstellation({ initialNodes }: Props) {
             onClose: handleNodeCloseWithNode,
             onDelete: handleNodeDelete,
             onAddChild: handleAddChild,
-            onUpdateMetadata: handleUpdateMetadata
+            onUpdateMetadata: handleUpdateMetadata,
           }}
         />
       </Canvas>
@@ -131,7 +135,9 @@ function InteractiveConstellation({ initialNodes }: Props) {
         onResetBranchPositions={handleResetBranchPositionsWithId}
         onStartConstellation={handleStartConstellation}
         onDeselect={handleDeselect}
-        onToggleSmartLayout={() => setIsSmartLayoutEnabled(!isSmartLayoutEnabled)}
+        onToggleSmartLayout={() =>
+          setIsSmartLayoutEnabled(!isSmartLayoutEnabled)
+        }
         hasSelectedNode={!!activeNodeId}
         isSmartLayoutEnabled={isSmartLayoutEnabled}
       />
