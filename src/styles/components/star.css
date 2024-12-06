@@ -6,7 +6,13 @@
   opacity: 0;
   animation: 
     starAppear 0.6s ease-out var(--animation-delay, 0ms) forwards,
-    starPulse 3s ease-in-out calc(var(--animation-delay, 0ms) + 0.6s) infinite;
+    starPulse var(--pulse-duration) ease-in-out calc(var(--animation-delay, 0ms) + 0.6s) infinite;
+}
+
+.star.active {
+  animation: 
+    starAppear 0.6s ease-out var(--animation-delay, 0ms) forwards;
+  opacity: var(--star-opacity);
 }
 
 .star.closing {
@@ -24,4 +30,37 @@
 
 .star-label.closing {
   animation: fadeOut 0.6s ease-in forwards;
+}
+
+@keyframes starPulse {
+  0%, 100% {
+    opacity: calc(var(--star-opacity) * 0.6);
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: var(--star-opacity);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes starAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: var(--star-opacity);
+    transform: scale(1);
+  }
+}
+
+@keyframes starClose {
+  0% {
+    opacity: var(--star-opacity);
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
 }

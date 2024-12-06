@@ -1,0 +1,17 @@
+.background-stars {
+  pointer-events: none;
+}
+
+.background-star {
+  opacity: var(--star-opacity);
+  animation: backgroundStarPulse var(--pulse-duration) ease-in-out infinite;
+}
+
+@keyframes backgroundStarPulse {
+  0%, 100% {
+    opacity: calc(var(--star-opacity) * 0.3);
+  }
+  50% {
+    opacity: var(--star-opacity);
+  }
+}

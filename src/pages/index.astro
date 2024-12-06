@@ -1,8 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import InteractiveConstellation from '../components/InteractiveConstellation';
+import { InteractiveConstellation } from '../features/constellation';
 import { mockData } from '../data/mockData';
-import { calculateNodePositions } from '../utils/mindMapLayout';
+import { calculateNodePositions } from '../features/constellation/utils';
 import '../styles/index.css';
 
 const nodePositions = calculateNodePositions(mockData);
@@ -10,7 +10,9 @@ const nodePositions = calculateNodePositions(mockData);
 
 <Layout title="Cosmic Mind Map">
   <main>
-    <InteractiveConstellation client:only="react" initialNodes={nodePositions} />
+    <div id="constellation-root">
+      <InteractiveConstellation client:only="react" initialNodes={nodePositions} />
+    </div>
   </main>
 </Layout>
 
@@ -19,5 +21,10 @@ const nodePositions = calculateNodePositions(mockData);
     width: 100%;
     height: 100vh;
     overflow: hidden;
+  }
+
+  #constellation-root {
+    width: 100%;
+    height: 100%;
   }
 </style>

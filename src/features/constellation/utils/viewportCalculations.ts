@@ -1,4 +1,4 @@
-import { DEFAULTS } from '../config/constellation';
+import { DEFAULTS } from '../config';
 
 export function getViewportDimensions(): { width: number; height: number } {
   if (typeof window === 'undefined') {
@@ -7,10 +7,17 @@ export function getViewportDimensions(): { width: number; height: number } {
       height: DEFAULTS.VIEWPORT.HEIGHT
     };
   }
-  return {
-    width: window.innerWidth,
-    height: window.innerHeight
-  };
+
+  const width = Math.max(
+    window.innerWidth,
+    DEFAULTS.VIEWPORT.WIDTH
+  );
+  const height = Math.max(
+    window.innerHeight,
+    DEFAULTS.VIEWPORT.HEIGHT
+  );
+
+  return { width, height };
 }
 
 export function calculateCenterPosition(): { x: number; y: number } {

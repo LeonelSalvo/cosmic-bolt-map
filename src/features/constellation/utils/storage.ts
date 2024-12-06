@@ -1,5 +1,5 @@
-import type { NodePosition, MindMapNode } from '../types/MindMap';
-import { STORAGE } from '../config/constellation';
+import type { NodePosition, MindMapNode } from '../types';
+import { STORAGE } from '../config';
 
 interface StoredData {
   nodes: MindMapNode;

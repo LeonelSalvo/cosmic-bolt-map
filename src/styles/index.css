@@ -9,3 +9,5 @@
 @import './components/camera-controls.css';
 @import './components/constellation-controls.css';
 @import './components/layout-controls.css';
+@import './components/zoom-controls.css';
+@import './components/background.css';

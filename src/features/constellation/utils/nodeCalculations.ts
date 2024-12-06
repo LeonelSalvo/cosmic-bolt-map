@@ -1,11 +1,11 @@
-import type { NodePosition, MindMapNode } from '../types/MindMap';
-import { NODE } from '../config/constellation';
+import type { NodePosition, MindMapNode } from '../types';
+import { NODE } from '../config';
 
 export function calculateDistanceFromActive(nodes: NodePosition[], activeNodeId: string | null): NodePosition[] {
   if (!activeNodeId) {
     return nodes.map(node => ({
       ...node,
-      distanceFromActive: node.level
+      distanceFromActive: 0 // No distance when no node is selected
     }));
   }
 
@@ -13,29 +13,28 @@ export function calculateDistanceFromActive(nodes: NodePosition[], activeNodeId:
   if (!activeNode) return nodes;
 
   return nodes.map(node => {
-    // Check if this node is a direct child of the active node
+    // Direct children of active node
     const isDirectChild = activeNode.node.children?.some(child => child.id === node.node.id);
-    
     if (isDirectChild) {
       return {
         ...node,
-        distanceFromActive: 0.2 // Direct children are very bright
+        distanceFromActive: 0.2
       };
     }
 
-    // Check if this node is the parent of the active node
+    // Parent of active node
     const isParent = node.node.children?.some(child => child.id === activeNodeId);
     if (isParent) {
       return {
         ...node,
-        distanceFromActive: 0.3 // Parent is quite bright
+        distanceFromActive: 0.3
       };
     }
 
-    // For other nodes, calculate distance based on their position
+    // Calculate distance based on position for other nodes
     const dx = node.x - activeNode.x;
     const dy = node.y - activeNode.y;
-    const distance = Math.sqrt(dx * dx + dy * dy) / 200; // Normalize distance
+    const distance = Math.sqrt(dx * dx + dy * dy) / 200;
     return {
       ...node,
       distanceFromActive: distance
@@ -54,8 +53,19 @@ export function getNodeSize(node: NodePosition, hasChildren: boolean, isActive: 
 export function getNodeOpacity(node: NodePosition, isActive: boolean): number {
   if (isActive) return NODE.OPACITY.MAX;
   
+  if (node.distanceFromActive === 0) {
+    // When no node is selected or it's part of the unselected state
+    return NODE.OPACITY.UNSELECTED.MAX;
+  }
+  
   const distance = node.distanceFromActive || node.level;
   return Math.max(NODE.OPACITY.MIN, NODE.OPACITY.MAX - distance * NODE.OPACITY.LEVEL_DECAY);
+}
+
+export function getNodePulseDuration(): number {
+  return Math.random() * 
+    (NODE.OPACITY.PULSE.DURATION.MAX - NODE.OPACITY.PULSE.DURATION.MIN) + 
+    NODE.OPACITY.PULSE.DURATION.MIN;
 }
 
 export function findAllChildrenIds(node: MindMapNode): string[] {
